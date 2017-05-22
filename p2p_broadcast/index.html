@@ -43,26 +43,26 @@
             });
             $('#watch').submit(function (e) {
                 e.preventDefault();
-//                navigator.getUserMedia({audio: false, video: false}, function (stream) {
-//                    window.localStream = stream;
+                navigator.getUserMedia({audio: true, video: true}, function (stream) {
+                    window.localStream = stream;
                     var roomName = 'test';//$('#join-room').val();
                     if (!roomName) {
                         return;
                     }
-//                    $.map(stream.getVideoTracks(), function (track, i) {
-//                        track.enabled = false;
-//
-//                    });
-//                    $.map(stream.getAudioTracks(), function (track, i) {
-//                        track.enabled = false;
-//                    });
+                    $.map(stream.getVideoTracks(), function (track, i) {
+                        track.enabled = false;
+
+                    });
+                    $.map(stream.getAudioTracks(), function (track, i) {
+                        track.enabled = false;
+                    });
 
                     room = peer.joinRoom('sfu_video_' + roomName, {mode: 'sfu'});//, stream: window.localStream});
                     window.broadcasting = false;
                     step3(room);
-//                }, function () {
-//                    $('#step1-error').show();
-//                });
+                }, function () {
+                    $('#step1-error').show();
+                });
             });
         });
 
@@ -114,9 +114,9 @@
             <form id="broadcast" class="pure-form">
                 <button href="#" class="pure-button pure-button-success" type="submit">Broadcast</button>
             </form>
-            <p>If you want to watch broadcasting, enter broadcaster's peer ID and click Watch button.</p>
+            <p>If you want to watch broadcasting, click Watch button.</p>
             <form id="watch" class="pure-form">
-                <input type="text" placeholder="Call user id..." id="callto-id">
+                <!--<input type="text" placeholder="Call user id..." id="callto-id">-->
                 <button href="#" class="pure-button pure-button-success" type="submit">Watch</button>
             </form>
         </div>
