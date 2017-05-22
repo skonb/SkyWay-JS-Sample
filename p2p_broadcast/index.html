@@ -34,7 +34,11 @@
                     if (!roomName) {
                         return;
                     }
-                    room = peer.joinRoom('sfu_video_' + roomName, {mode: 'sfu', stream: window.localStream, originator: true});
+                    room = peer.joinRoom('sfu_video_' + roomName, {
+                        mode: 'sfu',
+                        stream: window.localStream,
+                        originator: true
+                    });
                     window.broadcasting = true;
                     step3(room);
                 }, function () {
@@ -57,7 +61,7 @@
                         track.enabled = false;
                     });
 
-                    room = peer.joinRoom('sfu_video_' + roomName, {mode: 'sfu'});//, stream: window.localStream});
+                    room = peer.joinRoom('sfu_video_' + roomName, {mode: 'sfu', stream: window.localStream});
                     window.broadcasting = false;
                     step3(room);
                 }, function () {
