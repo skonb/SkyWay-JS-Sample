@@ -75,14 +75,19 @@
             // Wait for stream on the call, then set peer video display
             room.on('stream', function (stream) {
                 if (!window.broadcasting) {
-                    window.remoteStream = stream;
-                    window.broadcastingPeerId = stream.peerId;
-                    $('#video').get(0).srcObject = stream;
+                    if(!window.broadcastingPeerId || stream.peerId === window.broadcastingPeerId) {
+                        window.remoteStream = stream;
+                        window.broadcastingPeerId = stream.peerId;
+                        $('#video').get(0).srcObject = stream;
+                    }
                 }
             });
 
             room.on('removeStream', function (stream) {
-                $('#video').get(0).srcObject = null;
+                if(!window.broadcasting && stream.peerId === window.broadcastingPeerId) {
+                    $('#video').get(0).srcObject = null;
+                    window.broadcastingPeerId = null;
+                }
             });
 
             // UI stuff
