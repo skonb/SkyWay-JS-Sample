@@ -76,7 +76,7 @@
             room.on('stream', function (stream) {
                 if (!window.broadcasting) {
                     if(!window.broadcastingPeerId || stream.peerId === window.broadcastingPeerId) {
-                        if(stream.getVideoTracks() > 0 && stream.getVideoTracks()[0].enabled) {
+                        if(stream.getVideoTracks().length > 0 && stream.getVideoTracks()[0].enabled) {
                             window.remoteStream = stream;
                             window.broadcastingPeerId = stream.peerId;
                             $('#video').get(0).srcObject = stream;
