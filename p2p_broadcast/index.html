@@ -22,6 +22,7 @@
             alert(err.message);
         });
 
+        var broadcasterId;
         // Click handlers setup
         $(function () {
             $('#broadcast').submit(function (e) {
@@ -30,7 +31,8 @@
                     // Set your video displays. Don't use srcObject because it can sometimes corrupt the mediaStream in Chrome 56+.
                     $('#video').get(0).src = URL.createObjectURL(stream);
                     window.localStream = stream;
-                    var roomName = 'test';//$('#join-room').val();
+                    var roomName = peer.id;//$('#join-room').val();
+                    window.broadcasterId = peer.id;
                     if (!roomName) {
                         return;
                     }
@@ -49,7 +51,8 @@
                 e.preventDefault();
                 navigator.getUserMedia({audio: true, video: true}, function (stream) {
                     window.localStream = stream;
-                    var roomName = 'test';//$('#join-room').val();
+                    window.broadcasterId = $('#broadcaster-id').val();
+                    var roomName = window.broadcasterId;
                     if (!roomName) {
                         return;
                     }
@@ -75,18 +78,16 @@
             // Wait for stream on the call, then set peer video display
             room.on('stream', function (stream) {
                 if (!window.broadcasting) {
-                    if(!window.broadcastingPeerId || stream.peerId === window.broadcastingPeerId) {
-                        if(stream.getVideoTracks().length > 0 && stream.getVideoTracks()[0].enabled) {
-                            window.remoteStream = stream;
-                            window.broadcastingPeerId = stream.peerId;
-                            $('#video').get(0).srcObject = stream;
-                        }
+                    if (stream.peerId === window.broadcasterId) {
+                        window.remoteStream = stream;
+                        window.broadcastingPeerId = stream.peerId;
+                        $('#video').get(0).srcObject = stream;
                     }
                 }
             });
 
             room.on('removeStream', function (stream) {
-                if(!window.broadcasting && stream.peerId === window.broadcastingPeerId) {
+                if (window.broadcasterId === stream.peerId) {
                     $('#video').get(0).srcObject = null;
                     window.broadcastingPeerId = null;
                 }
@@ -125,9 +126,9 @@
             <form id="broadcast" class="pure-form">
                 <button href="#" class="pure-button pure-button-success" type="submit">Broadcast</button>
             </form>
-            <p>If you want to watch broadcasting, click Watch button.</p>
+            <p>If you want to watch broadcasting, enter broadcaster id and click Watch button.</p>
             <form id="watch" class="pure-form">
-                <!--<input type="text" placeholder="Call user id..." id="callto-id">-->
+                <input type="text" placeholder="Broadcaster user id..." id="broadcaster-id">
                 <button href="#" class="pure-button pure-button-success" type="submit">Watch</button>
             </form>
         </div>
