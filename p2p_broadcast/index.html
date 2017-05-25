@@ -50,21 +50,23 @@
             $('#watch').submit(function (e) {
                 e.preventDefault();
                 navigator.getUserMedia({audio: true, video: true}, function (stream) {
-                    window.localStream = stream;
                     window.broadcasterId = $('#broadcaster-id').val();
                     var roomName = window.broadcasterId;
                     if (!roomName) {
                         return;
                     }
+                    var mediaStream = new MediaStream();
                     $.map(stream.getVideoTracks(), function (track, i) {
                         track.enabled = false;
-
+                        mediaStream.addTrack(track);
                     });
                     $.map(stream.getAudioTracks(), function (track, i) {
                         track.enabled = false;
+                        mediaStream.addTrack(track);
                     });
 
-                    room = peer.joinRoom('sfu_video_' + roomName, {mode: 'sfu', stream: window.localStream});
+                    room = peer.joinRoom('sfu_video_' + roomName, {mode: 'sfu', stream: mediaStream});
+                    window.localStream = mediaStream;
                     window.broadcasting = false;
                     step3(room);
                 }, function () {
