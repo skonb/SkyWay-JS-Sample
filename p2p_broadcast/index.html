@@ -49,7 +49,10 @@
             });
             $('#watch').submit(function (e) {
                 e.preventDefault();
-                navigator.getUserMedia({audio: true, video: true}, function (stream) {
+                navigator.getUserMedia({
+                    audio: true,
+                    video: {width: {ideal: 320}, height: {ideal: 240}, frameRate: {ideal: 5}}
+                }, function (stream) {
                     window.broadcasterId = $('#broadcaster-id').val();
                     var roomName = window.broadcasterId;
                     if (!roomName) {
